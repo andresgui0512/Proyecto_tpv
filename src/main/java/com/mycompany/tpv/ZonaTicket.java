@@ -5,8 +5,10 @@
 package com.mycompany.tpv;
 
 import java.awt.Color;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,7 +20,6 @@ public class ZonaTicket extends JPanel {
 
     JTable tablaTicket;
     int x, y, ancho, alto;
-    
 
     public ZonaTicket(int x, int y, int ancho, int alto) {
         this.x = x;
@@ -34,23 +35,30 @@ public class ZonaTicket extends JPanel {
         ponTablaTicket();
 
         JLabel jlabel = new JLabel();
-        jlabel.setText("Hooooola");
         jlabel.setBounds(0, 0, 100, 10);
         jlabel.setVisible(true);
 
         add(jlabel);
     }
 
+    /**
+     * El método ponTablaTicket crea una tabla usando como modelo
+     * el "modeloTablaTicket" de la clase VariablesGenerales y lo
+     * agrega al panel "zonaTicket"
+     */
     private void ponTablaTicket() {
         tablaTicket = new JTable();
-        tablaTicket.setBounds(0, 0, ancho, alto / 2);
+
+        //El scrollPane permite desplazar los registros de la tabla
+        JScrollPane scrollPane = new JScrollPane(tablaTicket);
+        scrollPane.setBounds(0, 0, ancho, alto / 2);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Su pedido"));
+
+        //Campos que aparecen en la cabezera de la tabla
         Object[] header = new Object[]{"Nombre", "Precio", "Cantidad"};
         VariablesGenerales.modeloTablaTicket = new DefaultTableModel(header, 0);
-        
+
         tablaTicket.setModel(VariablesGenerales.modeloTablaTicket);
-        tablaTicket.setVisible(true);
-        add(tablaTicket);
+        add(scrollPane);
     }
 }
-
-
