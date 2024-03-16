@@ -5,9 +5,6 @@
 package com.mycompany.tpv;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,16 +14,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import com.stopwatch.IStopWatch;
 import com.stopwatch.StopWatch;
 /**
@@ -35,27 +27,22 @@ import com.stopwatch.StopWatch;
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
 
-    private final List familias = new ArrayList();
+    Familias familias;
     private final HashMap<String, Productos> productosHM = new HashMap<>();
-    final int FAMILIASxPAGINA = 6;
-    int paginaActual;
-    int numeroPaginas;
-    JPanel panelFamilias;
     JPanel panelProductos;
     JPanel pladur;
     static IStopWatch relojStopWatch;
 
-    /**
-     * Creates new form Familias
-     */
     public PantallaPrincipal() {
         relojStopWatch =StopWatch.create();
         relojStopWatch.start();
         initComponents();
         creaPaneles();
+        familias = new Familias(pladur,productosHM);
+        familias.setBounds(75, 10, 490, 240);
+        getContentPane().add(familias);
         conexionBD();
-        bontonesPasaPaginaFamilia();
-        muestraPaginaFamilias();
+        familias.muestraPaginaFamilias();
         mostrarProductosPrimeraFamilia();
         getContentPane().add(new ZonaTicket(600, 0, 400, 500));
         crearBotonTicket();
@@ -63,94 +50,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         relojStopWatch.stop();
     }
 
-    private void bontonesPasaPaginaFamilia() {
-        // Pongo flecha de antes y despues
-
-        JLabel flechaAnterior = new JLabel();
-        flechaAnterior.setIcon(new ImageIcon("recursos\\imagenes\\anterior.png"));
-        flechaAnterior.setVisible(true);
-        flechaAnterior.setBounds(75, 110, 50, 50);
-        getContentPane().add(flechaAnterior);
-
-        flechaAnterior.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                paginaActual = (--paginaActual + numeroPaginas) % numeroPaginas;
-                muestraPaginaFamilias();
-            }
-
-        });
-
-        JLabel flechaSiguiente = new JLabel();
-        flechaSiguiente.setIcon(new ImageIcon("recursos\\imagenes\\siguiente.png"));
-        flechaSiguiente.setVisible(true);
-        flechaSiguiente.setBounds(490, 110, 50, 50);
-        getContentPane().add(flechaSiguiente);
-
-        flechaSiguiente.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                paginaActual = (++paginaActual) % numeroPaginas;
-                muestraPaginaFamilias();
-            }
-
-        });
-    }
-
-    private void muestraPaginaFamilias() {
-        panelFamilias.removeAll();
-        // Pogo las familias
-        for (int i = paginaActual * FAMILIASxPAGINA; i < paginaActual * FAMILIASxPAGINA + FAMILIASxPAGINA && i < familias.size(); i++) {
-
-            // Creo el panel con la familia
-            JPanel panel = new JPanel();
-            JLabel imagen = new JLabel();
-            JLabel texto = new JLabel();
-
-            panel.setLayout(null);
-            // Añado el panel al JFrame
-            panelFamilias.add(panel);
-            // Añado los labels al Panel
-            panel.add(imagen);
-            panel.add(texto);
-
-            panel.setOpaque(true);
-            panel.setBounds(110 * ((i - paginaActual * FAMILIASxPAGINA) % 3), 125 * ((i - paginaActual * FAMILIASxPAGINA) / 3), 100, 115);
-            imagen.setOpaque(true);
-            imagen.setBounds(0, 0, 100, 100);
-            texto.setBounds(0, 100, 100, 15);
-            texto.setHorizontalAlignment(SwingConstants.CENTER);
-            texto.setVerticalAlignment(SwingConstants.CENTER);
-            imagen.setIcon(new ImageIcon("recursos\\imagenes\\" + familias.get(i) + ".jpg"));
-            texto.setText((String) familias.get(i));
-            imagen.setVisible(true);
-            texto.setVisible(true);
-            panelFamilias.repaint();
-
-            panel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    Component[] componentes = pladur.getComponents();
-                    for (Component componente : componentes) {
-                        if (componente instanceof JLabel) {
-                            pladur.remove(componente);
-                        }
-                    }
-                    productosHM.get(texto.getText()).setPaginaActual(0);
-
-                    productosHM.get(texto.getText()).muestraPaginaProductos();
-                    productosHM.get(texto.getText()).botonesPasaPaginaProducto();
-                }
-
-            });
-        }
-    }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -171,35 +70,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+    public static void main(String args[]) {
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PantallaPrincipal().setVisible(true);
@@ -222,11 +95,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             String sql = "SELECT * FROM familias";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
-
             while (resultSet.next()) {
-
+                
                 //Añade todos los nombres de las familias a la lista familias.
-                familias.add(resultSet.getString("Nombre"));
+                familias.getFamilias().add(resultSet.getString("Nombre"));
+                //ejemplo.add(resultSet.getString("Nombre"));
 
                 //La clase Productos se encarga de organizar los componentes dentro de
                 //los paneles que pide como parámetros.
@@ -260,39 +133,30 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             e.printStackTrace();
         }
         //Aquí se determina el número de paginas tomando en cuenta la cantidad de familias
-        numeroPaginas = 1 + familias.size() / FAMILIASxPAGINA;
+        //numeroPaginas = 1 + familias.size() / FAMILIASxPAGINA;
+        familias.setNumeroPaginas(1+familias.getFamilias().size()/familias.getFAMILIASxPAGINA());
     }
 
     private void creaPaneles() {
-        
-        panelFamilias = new JPanel();
-        panelFamilias.setLayout(null);
-        panelFamilias.setBounds(150, 10, 320, 240);
-        panelFamilias.setVisible(true);
 
-        getContentPane().add(panelFamilias);
-
-        /// Creamos el panel para los productos
         pladur = new JPanel();
         pladur.setLayout(null);
         pladur.setBounds(75, 260, 490, 365);
         pladur.setVisible(true);
-        pladur.setBackground(Color.pink);
+        pladur.setBackground(new Color(102, 179, 255));
         getContentPane().add(pladur);
 
         panelProductos = new JPanel();
         panelProductos.setLayout(null);
         panelProductos.setBounds(75, 0, 320, 365);
         panelProductos.setVisible(true);
-        panelProductos.setBackground(Color.red);
+        panelProductos.setOpaque(false);
 
         pladur.add(panelProductos);
     }
 
     private void mostrarProductosPrimeraFamilia() {
-
-        productosHM.get("" + familias.get(0)).muestraPaginaProductos();
-        //productosHM.get(""+familias.get(0)).bontonesPasaPaginaProducto();
+        productosHM.get("" + familias.getFamilias().get(0)).muestraPaginaProductos();
     }
 
     /**

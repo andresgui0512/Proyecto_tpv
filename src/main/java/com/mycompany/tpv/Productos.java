@@ -7,17 +7,8 @@ package com.mycompany.tpv;
 import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -38,14 +29,11 @@ class Productos {
     private int numeroPaginas;
     JPanel panelProductos;
     Container contenedorGeneral;
-    JPanel pladur; // Es el panel que contiene todo
 
     public Productos(Container contenedorGeneral, JPanel panelProductos) {
-
         this.panelProductos = panelProductos;
         this.contenedorGeneral = contenedorGeneral;
         botonesPasaPaginaProducto();
-        crearPladur();
     }
 
     public int getPaginaActual() {
@@ -83,9 +71,7 @@ class Productos {
             @Override
             public void mouseClicked(MouseEvent e) {
                 VariablesGenerales.restar = true;
-                System.out.println("Restar está en true");
             }
-
         });
 
         // Pongo flecha de antes y despues
@@ -123,7 +109,6 @@ class Productos {
     }
 
     public void muestraPaginaProductos() {
-        mostrarProductos();
         panelProductos.removeAll();
         // Pogo las familias
         for (int i = paginaActual * PRODUCTOSxPAGINA; i < paginaActual * PRODUCTOSxPAGINA + PRODUCTOSxPAGINA && i < productos.size(); i++) {
@@ -213,21 +198,6 @@ class Productos {
         
         VariablesGenerales.restar = false;
 
-        System.out.println("Producto selecionado: " + producto.getNombre() + " (" + producto.getPrecio() + ") ");
         VariablesGenerales.totalTicket += producto.getPrecioDouble();
-        System.out.println("Total actual: " + VariablesGenerales.totalTicket);
-
-    }
-
-    private void crearPladur() {
-
-    }
-
-    private void mostrarProductos() {
-
-        for (Producto producto : productos) {
-            System.out.println(producto.nombre);
-        }
-
     }
 }
