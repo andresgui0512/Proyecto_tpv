@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- *
+ * Muestra todas las familias y gestiona su funcionamiento.
  * @author andre
  */
 public class Familias extends JPanel {
@@ -31,6 +31,12 @@ public class Familias extends JPanel {
     int numeroPaginas;
     Container contenedorProductos;
 
+    /**
+     * Recibe el contenedor que almacena los productos, y el hashmap
+     * que enlaza las familias con los prouductos.
+     * @param contenedorProductos
+     * @param productosHM 
+     */
     public Familias(Container contenedorProductos, HashMap<String, Productos> productosHM) {
         this.productosHM = productosHM;
         this.contenedorProductos = contenedorProductos;
@@ -39,26 +45,51 @@ public class Familias extends JPanel {
         botonesPasaPaginaFamilia();
     }
 
+    /**
+     * Devuelve la lista de familias
+     * @return List(String)
+     */
     public List getFamilias() {
         return familias;
     }
 
+    /**
+     * Permite modificar la lista de familias.
+     * @param familias List(String)
+     */
     public void setFamilias(List familias) {
         this.familias = familias;
     }
 
+    /**
+     * Devuelve el número de páginas
+     * @return int
+     */
     public int getNumeroPaginas() {
         return numeroPaginas;
     }
 
+    /**
+     * Permite modificar el número de páginas
+     * @param numeroPaginas int
+     */
     public void setNumeroPaginas(int numeroPaginas) {
         this.numeroPaginas = numeroPaginas;
     }
 
+    /**
+     * Devuelve el número de familias por página
+     * @return 
+     */
     public int getFAMILIASxPAGINA() {
         return FAMILIASxPAGINA;
     }
 
+    /**
+     * Crea el panel que contendrá las familias, y define
+     * la clase la cual es un panel que contiene el panelFamilias
+     * y los botones de desplazamiento.
+     */
     private void creaPaneles() {
 
         setLayout(null);
@@ -74,6 +105,9 @@ public class Familias extends JPanel {
         add(panelFamilias);
     }
 
+    /**
+     * Crea los botones de desplazamiento de izquierda y derecha
+     */
     private void botonesPasaPaginaFamilia() {
 
         JLabel flechaAnterior = new JLabel();
@@ -105,23 +139,29 @@ public class Familias extends JPanel {
         });
     }
 
+    /**
+     * Actualiza las familias que se muestran en el panelFamilias de acuerdo al
+     * número de familias y la página actual.
+     */
     public void muestraPaginaFamilias() {
-        panelFamilias.removeAll();
-        // Pogo las familias
+        panelFamilias.removeAll();//Elimina todas las familias del panel
+
         for (int i = paginaActual * FAMILIASxPAGINA; i < paginaActual * FAMILIASxPAGINA + FAMILIASxPAGINA && i < familias.size(); i++) {
 
-            // Creo el panel con la familia
+            //Crea los labels que contendrán el nombre de la familia
+            //y la imagen de la misma y el panel que contendrá estos labels
             JPanel panel = new JPanel();
+            panel.setBackground(new Color(255, 153, 102));
             JLabel imagen = new JLabel();
             JLabel texto = new JLabel();
 
+            //Los añado al panelFamilias
             panel.setLayout(null);
-            // Añado el panel al JFrame
             panelFamilias.add(panel);
-            // Añado los labels al Panel
             panel.add(imagen);
             panel.add(texto);
 
+            //Defino las características de los componentes
             panel.setOpaque(true);
             panel.setBounds(110 * ((i - paginaActual * FAMILIASxPAGINA) % 3), 125 * ((i - paginaActual * FAMILIASxPAGINA) / 3), 100, 115);
             imagen.setOpaque(true);
@@ -131,10 +171,13 @@ public class Familias extends JPanel {
             texto.setVerticalAlignment(SwingConstants.CENTER);
             imagen.setIcon(new ImageIcon("recursos\\imagenes\\" + familias.get(i) + ".jpg"));
             texto.setText((String) familias.get(i));
+            
             imagen.setVisible(true);
             texto.setVisible(true);
             panelFamilias.repaint();
 
+            //Al presionar una familia se eliminan todos los compenentes del panelProductos
+            //y de acuerdo a la página actual se crean los correpondientes
             panel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

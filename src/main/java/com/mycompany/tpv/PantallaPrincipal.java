@@ -21,24 +21,34 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import com.stopwatch.IStopWatch;
 import com.stopwatch.StopWatch;
+import java.awt.Font;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 /**
- *
- * @author Moncho
+ * PantallaPrincipal genera la ventana del programa y gestiona
+ * la conexión con la base de datos.
+ * @author andre
  */
-public class PantallaPrincipal extends javax.swing.JFrame {
+public class PantallaPrincipal extends JFrame {
 
     Familias familias;
     private final HashMap<String, Productos> productosHM = new HashMap<>();
     JPanel panelProductos;
-    JPanel pladur;
+    JPanel panelGeneralProductos;
     static IStopWatch relojStopWatch;
 
+    /**
+     * El constructor llama a los métodos necesarios
+     * para la ejecución del programa e instancia la clase Familias.
+     */
     public PantallaPrincipal() {
         relojStopWatch =StopWatch.create();
         relojStopWatch.start();
         initComponents();
         creaPaneles();
-        familias = new Familias(pladur,productosHM);
+        familias = new Familias(panelGeneralProductos,productosHM);
         familias.setBounds(75, 10, 490, 240);
         getContentPane().add(familias);
         conexionBD();
@@ -49,12 +59,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         System.out.println("Tiempo transcurrido al iniciar el programa: "+relojStopWatch.elapsedMillis()+" milisegundos.");
         relojStopWatch.stop();
     }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    
+    /**
+     * Define las características de la ventana principal como el icono,
+     * el tamaño y la posición.
+     */
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        ImageIcon icon = new ImageIcon("recursos\\imagenes\\tpv_icono.png");
+        setIconImage(icon.getImage());
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -66,22 +81,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 685, Short.MAX_VALUE)
         );
-
         pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PantallaPrincipal().setVisible(true);
-            }
-        });
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
+    } 
+    
     /**
      * El método conexionBD realiza la conexión con la base de datos "tpv_db" y
      * extrae los nombres de las familias, los productos y sus precios.
@@ -103,7 +105,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
                 //La clase Productos se encarga de organizar los componentes dentro de
                 //los paneles que pide como parámetros.
-                Productos productos = new Productos(pladur, panelProductos);
+                Productos productos = new Productos(panelGeneralProductos, panelProductos);
 
                 //Sentencia para obtener los productos
                 String sqll = "SELECT * FROM productos";
@@ -137,14 +139,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         familias.setNumeroPaginas(1+familias.getFamilias().size()/familias.getFAMILIASxPAGINA());
     }
 
+    /**
+     * Crea los paneles donde se mostrarán los productos, como el panelGeneral
+     * que contiene las flechas de desplazamiento y el panelProductos, este último contiene
+     * los productos.
+     */
     private void creaPaneles() {
 
-        pladur = new JPanel();
-        pladur.setLayout(null);
-        pladur.setBounds(75, 260, 490, 365);
-        pladur.setVisible(true);
-        pladur.setBackground(new Color(102, 179, 255));
-        getContentPane().add(pladur);
+        panelGeneralProductos = new JPanel();
+        panelGeneralProductos.setLayout(null);
+        panelGeneralProductos.setBounds(75, 260, 490, 365);
+        panelGeneralProductos.setVisible(true);
+        panelGeneralProductos.setBackground(new Color(102, 179, 255));
+        getContentPane().add(panelGeneralProductos);
 
         panelProductos = new JPanel();
         panelProductos.setLayout(null);
@@ -152,9 +159,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         panelProductos.setVisible(true);
         panelProductos.setOpaque(false);
 
-        pladur.add(panelProductos);
+        panelGeneralProductos.add(panelProductos);
     }
 
+    /**
+     * Muestra por la interfaz la primera familia de productos. 
+     */
     private void mostrarProductosPrimeraFamilia() {
         productosHM.get("" + familias.getFamilias().get(0)).muestraPaginaProductos();
     }
@@ -162,12 +172,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     /**
      * El método crearBotonTicket crea un botón que llama al método
      * imprimirTicket y gestiona la cantidad de tickets a generar
-     * si el pedido excede el límite de productos por ticket
+     * si el pedido excede el límite de productos por ticket.
      */
     private void crearBotonTicket() {
         
         //Creación del botón
         JButton botoncrearTicket = new JButton("Finalizar pedido");
+        botoncrearTicket.setBackground(new Color(71, 209, 71));
+        botoncrearTicket.setForeground(Color.white);
+        botoncrearTicket.setFont(new Font("Arial", Font.BOLD, 13));
         botoncrearTicket.setBounds(730, 530, 140, 60);
         add(botoncrearTicket);
 

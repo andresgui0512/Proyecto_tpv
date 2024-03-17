@@ -6,39 +6,38 @@ package com.mycompany.tpv;
 
 import java.awt.Color;
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Moncho
+ * Panel que mostrará la tabla de productos en la ventana
+ * @author andre
  */
 public class ZonaTicket extends JPanel {
 
     JTable tablaTicket;
     int x, y, ancho, alto;
 
+    /**
+     * Recibe la posición y el tamaño que definirán el panel
+     * @param x int
+     * @param y int
+     * @param ancho int
+     * @param alto int
+     */
     public ZonaTicket(int x, int y, int ancho, int alto) {
         this.x = x;
         this.y = y;
         this.ancho = ancho;
         this.alto = alto;
+        
+        //Características del panel
         setLayout(null);
         setBounds(x, y, ancho, alto);
-        setOpaque(true);
-        setBackground(Color.red);
         setVisible(true);
-
         ponTablaTicket();
-
-        JLabel jlabel = new JLabel();
-        jlabel.setBounds(0, 0, 100, 10);
-        jlabel.setVisible(true);
-
-        add(jlabel);
     }
 
     /**
@@ -51,7 +50,8 @@ public class ZonaTicket extends JPanel {
 
         //El scrollPane permite desplazar los registros de la tabla
         JScrollPane scrollPane = new JScrollPane(tablaTicket);
-        scrollPane.setBounds(0, 0, ancho, alto / 2);
+        scrollPane.setBounds(0, 0, ancho, alto);
+        scrollPane.setBackground(Color.white);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Su pedido"));
 
         //Campos que aparecen en la cabezera de la tabla

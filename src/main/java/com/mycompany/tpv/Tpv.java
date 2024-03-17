@@ -5,8 +5,8 @@
 package com.mycompany.tpv;
 
 /**
- *
- * @author Moncho
+ * Instancia la PantallaPrincipal.
+ * @author andre
  */
 public class Tpv {
 
