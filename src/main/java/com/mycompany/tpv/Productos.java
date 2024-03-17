@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -16,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * Presenta por pantalla los productos y
- * gestiona su funcionamiento.
+ * Presenta por pantalla los productos y gestiona su funcionamiento.
+ *
  * @author andre
  */
 class Productos {
@@ -32,9 +33,9 @@ class Productos {
     Container contenedorGeneral;
 
     /**
-     * Recibe un contenedorGeneral en donde se mostrarán las flechas
-     * de desplazamiento y un panel en donde se mostrarán los productos.
-     * 
+     * Recibe un contenedorGeneral en donde se mostrarán las flechas de
+     * desplazamiento y un panel en donde se mostrarán los productos.
+     *
      * @param contenedorGeneral Container
      * @param panelProductos JPanel
      */
@@ -47,7 +48,8 @@ class Productos {
 
     /**
      * Devuelve la página actual.
-     * @return 
+     *
+     * @return
      */
     public int getPaginaActual() {
         return paginaActual;
@@ -55,6 +57,7 @@ class Productos {
 
     /**
      * Permite modificar la página actual.
+     *
      * @param paginaActual int
      */
     public void setPaginaActual(int paginaActual) {
@@ -63,7 +66,8 @@ class Productos {
 
     /**
      * Devuelve el número de páginas.
-     * @return 
+     *
+     * @return
      */
     public int getNumeroPaginas() {
         return numeroPaginas;
@@ -71,6 +75,7 @@ class Productos {
 
     /**
      * Permite modificar el número de páginas.
+     *
      * @param numeroPaginas int
      */
     public void setNumeroPaginas(int numeroPaginas) {
@@ -79,6 +84,7 @@ class Productos {
 
     /**
      * Devuelve una lista con objetos Producto.
+     *
      * @return List(Producto)
      */
     public List<Producto> getProductos() {
@@ -87,17 +93,18 @@ class Productos {
 
     /**
      * Permite modificar la lista de objetos Producto
-     * @param productos 
+     *
+     * @param productos
      */
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
     }
 
     /**
-     * Crea el botón de borrar del contenedorGeneral que permite
-     * eliminar un producto de la lista.
+     * Crea el botón de borrar del contenedorGeneral que permite eliminar un
+     * producto de la lista.
      */
-    public void crearBotonBorrar(){
+    public void crearBotonBorrar() {
 
         JLabel botonBorrar = new JLabel();
         botonBorrar.setIcon(new ImageIcon("recursos\\imagenes\\iconoBorrar.png"));
@@ -105,7 +112,7 @@ class Productos {
         botonBorrar.setVisible(true);
 
         contenedorGeneral.add(botonBorrar);//Agrego el botón al panel.
-        
+
         //Función del botón
         botonBorrar.addMouseListener(new MouseAdapter() {
             @Override
@@ -115,15 +122,15 @@ class Productos {
                 //de la lista.
                 VariablesGenerales.restar = true;
             }
-        });        
+        });
     }
-    
+
     /**
-     * Crea los botones de desplazamiento de izquierda y derecha y 
-     * les asigna sus funciones.
+     * Crea los botones de desplazamiento de izquierda y derecha y les asigna
+     * sus funciones.
      */
     public void botonesPasaPaginaProducto() {
-        
+
         //Creación del botón de la izquierda y su función.
         JLabel flechaAnterior = new JLabel();
         flechaAnterior.setIcon(new ImageIcon("recursos\\imagenes\\anterior.png"));
@@ -162,16 +169,16 @@ class Productos {
 
     /**
      * Actualiza todos los componentes que se muestran en el panel de productos,
-     * de acuerdo a la página actual mostrará los productos correspondientes. 
+     * de acuerdo a la página actual mostrará los productos correspondientes.
      */
     public void muestraPaginaProductos() {
         panelProductos.removeAll();//Elimina todos los productos del panel
-        
+
         //De acuerdo a la página actual y la cantidad de productos se mostrarán los productos correspondientes
         //en el panel.
         for (int i = paginaActual * PRODUCTOSxPAGINA; i < paginaActual * PRODUCTOSxPAGINA + PRODUCTOSxPAGINA && i < productos.size(); i++) {
             final int PRODUCTOACTUAL = i;
-            
+
             //Se crean los labels que representan a cada producto
             //y se añaden a un panel.
             JPanel panel = new JPanel();
@@ -212,14 +219,14 @@ class Productos {
     }
 
     /**
-     * Recibe un producto como parámetro y lo imprime en la
-     * general.
+     * Recibe un producto como parámetro y lo imprime en la general.
+     *
      * @param producto Producto a mostrar en la tabla.
      */
-    private void imprimePrecio(Producto producto) {
+    public void imprimePrecio(Producto producto) {
 
         boolean encontrado = false;//Señala si se encontró un producto 
-        
+
         for (int i = 0; i < VariablesGenerales.lineasTicket.size(); i++) {
 
             //Si el producto recibido ya está en la tabla
@@ -232,12 +239,12 @@ class Productos {
                     // Modificamos la cantidad en el modelo que gestiona la tabla del ticket
                     VariablesGenerales.modeloTablaTicket.setValueAt(VariablesGenerales.lineasTicket.get(i).getCantidadProducto(), i, 2);
 
-                //Si hay un solo producto y se ha presionado el botón borrar se elimina de la tabla
+                    //Si hay un solo producto y se ha presionado el botón borrar se elimina de la tabla
                 } else if (VariablesGenerales.lineasTicket.get(i).getCantidadProducto() == 1 && VariablesGenerales.restar) {
                     VariablesGenerales.lineasTicket.remove(i);
                     VariablesGenerales.modeloTablaTicket.removeRow(i);
 
-                //Si hay un producto y no se ha presionado el botón borrar    
+                    //Si hay un producto y no se ha presionado el botón borrar    
                 } else {
                     //Si ya hay un producto y no se ha presionado el botón borrar aumenta la cantidad del mismo
                     VariablesGenerales.lineasTicket.get(i).setCantidadProducto(
@@ -266,6 +273,10 @@ class Productos {
         }
 
         VariablesGenerales.restar = false;
+
         VariablesGenerales.totalTicket += producto.getPrecioDouble();//Aumenta el precio total.
+        
+        double factor = Math.pow(10, 2);
+        VariablesGenerales.totalTicket = Math.round(VariablesGenerales.totalTicket* factor) / factor;
     }
 }

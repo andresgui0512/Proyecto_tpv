@@ -24,7 +24,6 @@ import com.stopwatch.StopWatch;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /**
  * PantallaPrincipal genera la ventana del programa y gestiona
@@ -34,7 +33,7 @@ import javax.swing.SwingUtilities;
 public class PantallaPrincipal extends JFrame {
 
     Familias familias;
-    private final HashMap<String, Productos> productosHM = new HashMap<>();
+    public final HashMap<String, Productos> productosHM = new HashMap<>();
     JPanel panelProductos;
     JPanel panelGeneralProductos;
     static IStopWatch relojStopWatch;
@@ -88,7 +87,7 @@ public class PantallaPrincipal extends JFrame {
      * El método conexionBD realiza la conexión con la base de datos "tpv_db" y
      * extrae los nombres de las familias, los productos y sus precios.
      */
-    private void conexionBD() {
+    public void conexionBD() {
         try {
             //Conexión con la base de datos.
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/lol", "root", "");
