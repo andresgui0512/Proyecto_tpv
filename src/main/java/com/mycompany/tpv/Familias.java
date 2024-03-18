@@ -4,6 +4,9 @@
  */
 package com.mycompany.tpv;
 
+import static com.mycompany.tpv.PantallaPrincipal.relojStopWatch;
+import com.stopwatch.IStopWatch;
+import com.stopwatch.StopWatch;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -19,6 +22,7 @@ import javax.swing.SwingConstants;
 
 /**
  * Muestra todas las familias y gestiona su funcionamiento.
+ *
  * @author andre
  */
 public class Familias extends JPanel {
@@ -30,23 +34,30 @@ public class Familias extends JPanel {
     int paginaActual;
     int numeroPaginas;
     Container contenedorProductos;
+    static IStopWatch relojStopWatch;
 
     /**
-     * Recibe el contenedor que almacena los productos, y el hashmap
-     * que enlaza las familias con los prouductos.
+     * Recibe el contenedor que almacena los productos, y el hashmap que enlaza
+     * las familias con los prouductos.
+     *
      * @param contenedorProductos
-     * @param productosHM 
+     * @param productosHM
      */
     public Familias(Container contenedorProductos, HashMap<String, Productos> productosHM) {
+        relojStopWatch = StopWatch.create();
+        relojStopWatch.start();
         this.productosHM = productosHM;
         this.contenedorProductos = contenedorProductos;
         familias = new ArrayList();
         creaPaneles();
         botonesPasaPaginaFamilia();
+        System.out.println("Tiempo de ejecución de la clase Familias: " + relojStopWatch.elapsedMillis() + " milisegundos.");
+        relojStopWatch.stop();
     }
 
     /**
      * Devuelve la lista de familias
+     *
      * @return List(String)
      */
     public List getFamilias() {
@@ -55,6 +66,7 @@ public class Familias extends JPanel {
 
     /**
      * Permite modificar la lista de familias.
+     *
      * @param familias List(String)
      */
     public void setFamilias(List familias) {
@@ -63,6 +75,7 @@ public class Familias extends JPanel {
 
     /**
      * Devuelve el número de páginas
+     *
      * @return int
      */
     public int getNumeroPaginas() {
@@ -71,6 +84,7 @@ public class Familias extends JPanel {
 
     /**
      * Permite modificar el número de páginas
+     *
      * @param numeroPaginas int
      */
     public void setNumeroPaginas(int numeroPaginas) {
@@ -79,16 +93,16 @@ public class Familias extends JPanel {
 
     /**
      * Devuelve el número de familias por página
-     * @return 
+     *
+     * @return
      */
     public int getFAMILIASxPAGINA() {
         return FAMILIASxPAGINA;
     }
 
     /**
-     * Crea el panel que contendrá las familias, y define
-     * la clase la cual es un panel que contiene el panelFamilias
-     * y los botones de desplazamiento.
+     * Crea el panel que contendrá las familias, y define la clase la cual es un
+     * panel que contiene el panelFamilias y los botones de desplazamiento.
      */
     private void creaPaneles() {
 
@@ -171,7 +185,7 @@ public class Familias extends JPanel {
             texto.setVerticalAlignment(SwingConstants.CENTER);
             imagen.setIcon(new ImageIcon("recursos\\imagenes\\" + familias.get(i) + ".jpg"));
             texto.setText((String) familias.get(i));
-            
+
             imagen.setVisible(true);
             texto.setVisible(true);
             panelFamilias.repaint();
@@ -187,6 +201,7 @@ public class Familias extends JPanel {
                             contenedorProductos.remove(componente);
                         }
                     }
+                    productosHM.get(texto.getText()).crearBotonBorrar();
                     productosHM.get(texto.getText()).setPaginaActual(0);
                     productosHM.get(texto.getText()).muestraPaginaProductos();
                     productosHM.get(texto.getText()).botonesPasaPaginaProducto();
